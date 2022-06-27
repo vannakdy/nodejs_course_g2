@@ -1,31 +1,19 @@
 const express = require("express")
+const bodyParser = require("body-parser")
 const app = express();
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:true}))
 
 app.get("/",(req,res)=>{
-    res.end("Hello node server")
+    res.send("");
 })
 
-app.get("/api/teacher",(req,res)=>{
-    // req.url
-    var arr_teacher = [
-        {
-            id : 1,
-            name : "Sok",
-            email : "sok@gmail.com"
-        },
-        {
-            id : 1,
-            name : "Sok",
-            email : "sok@gmail.com"
-        }
-    ]
-    var data  = {
-        teacher : arr_teacher
-    }
-    res.json(data)
-})
+// import
+require("./app/routes/teacher.routes")(app)
 
 
-app.listen(8080,()=>{
-    console.log("Server run on port : localhost:8080")
+const port = process.env.PORT || 8080;
+app.listen(port,()=>{
+    console.log("Server run on port : localhost:"+port)
 })
+

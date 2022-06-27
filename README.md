@@ -126,3 +126,37 @@ Java
 React Native
 IONIC
 Flutter
+
+
+* Create Route And Controller
+
+- call route in server.js
+    require("../app/route/teacher.route.js)
+    require("../app/route/course.route.js)
+    ....
+- create route
+    teacher.route.js
+    course.routes.js
+    student.route.js
+    classroom.route.js
+    user.router.js
+
+    const student = (app) => {
+        const router = require("express").Router();
+
+        router.method(url,handler)
+        router.get("/api/student",handler)
+        router.post("/api/student",handler)
+        router.put("/api/student",handler)
+
+    }
+
+- create controller
+    teacher.route.js
+        const getAll(){
+            
+        }
+    course.routes.js
+    student.route.js
+    classroom.route.js
+    user.router.js
