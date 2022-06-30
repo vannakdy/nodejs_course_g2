@@ -85,10 +85,61 @@ const create = (req,res) => {
     
 }
 const edit = (req,res) => {
-    res.send("Edit Teacher")
+    var body = req.body;
+    var message = ""
+    if(body.id == null || body.id == ""){
+        message = "param id require!";
+    }else if(body.name == null || body.name == ""){
+        message = "param name require!";
+    }else if(body.gender == null || body.gender == ""){
+        message = "param gender require!";
+    }else if(body.email == null || body.email == ""){
+        message = "param email require!";
+    }
+    if(message == ""){
+        var list = teacher.filter((item,index)=>item.id == body.id)
+        if(list.length != 0){// check is id exist in list teacher
+            var listTmp = teacher.map((item,index)=>{
+                item = {
+                    id  : 104,
+                    name : "Bona",
+                    gender : "male",
+                    email : "bona@gmailcom"
+                }
+                if(item.id == body.id){
+                    return {
+                        ...item,
+                        name : body.name,
+                        gender : body.gender,
+                        email : body.email,
+                    }
+                }
+                return {
+                    ...item
+                }
+            })
+            teacher = listTmp
+            res.json({
+                message : "ID " + body.id + " update success!"
+            })
+        }
+    }
+    
 }
 const remove = (req,res) => {
-    res.send("Delete Teacher")
+    var message = "";
+    var body = req.body;
+    if(body.id == null || body.id == ""){
+        message = "Param id require!";
+    }
+    if(message == ""){
+        var listTmp = teacher.filter((item,index)=>(item.id != body.id))
+        teacher = listTmp
+        res.json({
+            message : "Delete success!"
+        })
+    }
+
 }
 
 module.exports =  {
