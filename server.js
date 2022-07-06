@@ -11,6 +11,7 @@ app.get("/",(req,res)=>{
 // import
 require("./app/routes/teacher.routes")(app)
 require("./app/routes/student.routes")(app)
+require("./app/routes/customer.routes")(app)
 
 
 const port = process.env.PORT || 8080;
