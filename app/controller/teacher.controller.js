@@ -1,145 +1,167 @@
 
-var teacher = [
-    {
-        id  : 101,
-        name : "Sok",
-        gender : "male",
-        email : "sok@gmailcom"
-
-    },
-    {
-        id  : 102,
-        name : "Jon",
-        gender : "male",
-        email : "jon@gmailcom"
-        
-    },
-    {
-        id  : 103,
-        name : "Messi",
-        gender : "male",
-        email : "mesii@gmailcom"
-        
-    },
-    {
-        id  : 104,
-        name : "Bona",
-        gender : "male",
-        email : "bona@gmailcom"
-    }
-]
-
+const db = require("../config/db.config")
 const getLists = (req,res) =>{
-    var record = teacher.length
-    res.json({
-        total_record : record,
-        list : teacher
+    var sql = "SELECT * FROM teacher";
+    db.query(sql,(err,result)=>{
+        if(!err){
+            res.json({
+                list:result
+            })
+        }else{
+            res.json({
+                error : true,
+                message: err
+            })
+        }
     })
 }
 const  getOne = (req,res) => {
-    // console.log(req.query);
-    // console.log(req.body);
-    var params = (req.params);
-    var list = teacher.filter((item,index)=> (item.id == params.id)) //item.name == params.id || 
-    
-    res.json({
-        list : list
-    })
+    var params = req.params;
+    if(params != null && params.id){
+        sql = "SELECT * FROM teacher WHERE teacher_id = ?";
+        db.query(sql,[params.id],(err,result)=>{
+            if(!err){
+                res.json({
+                    list : result
+                })
+            }else{
+                res.json({
+                    error : true,
+                    message : err
+                })
+            }
+        })
+    }else{
+        res.json({
+            error : true,
+            message : "Param id require!"
+        })
+    }
 }
 
 const create = (req,res) => {
-    var body = req.body
-
-    var message = ""
-    if(body.id == null || body.id == ""){
-        message = "param id require!";
-    }else if(body.name == null || body.name == ""){
-        message = "param name require!";
-    }else if(body.gender == null || body.gender == ""){
-        message = "param gender require!";
-    }else if(body.email == null || body.email == ""){
-        message = "param email require!";
-    }
-
-    if(message == ""){
-        // check if existing id
-        var list = teacher.filter((item,index)=>item.id == body.id);
-        if(list.length !=0 ){
+    // teacher_id
+    // firstname
+    // lastname
+    // gender
+    // tel
+    // email
+    // description
+    const body = req.body;
+    if(body){
+        const {
+            firstname,
+            lastname,
+            gender,
+            tel,
+            email,
+            description
+        } = body;
+        var message = {}; //
+        
+        if(firstname == null || firstname == ""){
+            message.firstname = "Param first name require";
+        }
+        if(lastname == null || lastname == ""){
+            message.lastname = "Param last name require";
+        }
+        if(Object.keys(message).length != 0){
             res.json({
-                error : true,
-                message : "Teacher id alread exist! Please try other"
+                error : true, 
+                message : message
             })
         }else{
-            teacher.push(body)
-            res.json({
-                message : "Add success"
+            var sql = "INSERT INTO teacher (firstname,lastname,gender,tel,email,description) VALUES (?,?,?,?,?,?)";
+            db.query(sql,[firstname,lastname,gender,tel,email,description],(err,result)=>{
+                if(!err){
+                    res.json({
+                        message : "Insert successfully!"
+                    })
+                }else{
+                    res.json({
+                        error:true,
+                        message : err
+                    })
+                }
             })
         }
-    }else {
-        res.json({
-            error : true,
-            message :message
-        })
+
     }
-    
-    
 }
 const edit = (req,res) => {
-    var body = req.body;
-    var message = ""
-    if(body.id == null || body.id == ""){
-        message = "param id require!";
-    }else if(body.name == null || body.name == ""){
-        message = "param name require!";
-    }else if(body.gender == null || body.gender == ""){
-        message = "param gender require!";
-    }else if(body.email == null || body.email == ""){
-        message = "param email require!";
-    }
-    if(message == ""){
-        var list = teacher.filter((item,index)=>item.id == body.id)
-        if(list.length != 0){// check is id exist in list teacher
-            var listTmp = teacher.map((item,index)=>{
-                item = {
-                    id  : 104,
-                    name : "Bona",
-                    gender : "male",
-                    email : "bona@gmailcom"
-                }
-                if(item.id == body.id){
-                    return {
-                        ...item,
-                        name : body.name,
-                        gender : body.gender,
-                        email : body.email,
-                    }
-                }
-                return {
-                    ...item
-                }
-            })
-            teacher = listTmp
+    const body = req.body;
+    if(body){
+        const {
+            teacher_id,
+            firstname,
+            lastname,
+            gender,
+            tel,
+            email,
+            description
+        } = body;
+        var message = {}
+        if(teacher_id == null || teacher_id == ""){
+            message.teacher_id = "Param teacher id require";
+        }
+        if(firstname == null || firstname == ""){
+            message.firstname = "Param first name require";
+        }
+        if(lastname == null || lastname == ""){
+            message.lastname = "Param last name require";
+        }
+        if(Object.keys(message).length != 0){
             res.json({
-                message : "ID " + body.id + " update success!"
+                error : true, 
+                message : message
+            })
+        }else{
+            var sql = "UPDATE teacher SET firstname=?, lastname=?,gender = ?,tel=?, email=?, description=? WHERE teacher_id = ?"
+            db.query(sql,[firstname,lastname,gender,tel,email,description,teacher_id],(err,result)=>{
+                if(!err){
+                    res.json({
+                        message : "Update successfully!"
+                    })
+                }else{
+                    res.json({
+                        error:true,
+                        message : err
+                    })
+                }
             })
         }
+
     }
-    
 }
 const remove = (req,res) => {
-    var message = "";
     var body = req.body;
-    if(body.id == null || body.id == ""){
-        message = "Param id require!";
-    }
-    if(message == ""){
-        var listTmp = teacher.filter((item,index)=>(item.id != body.id))
-        teacher = listTmp
+    if(body){
+        if(body.teacher_id != null && body.teacher_id != ""){
+            sql = "DELETE FROM teacher WHERE teacher_id = ?";
+            db.query(sql,[body.teacher_id],(err,result)=>{
+                if(!err){
+                    res.json({
+                        message : "Delete successfully!"
+                    })
+                }else{
+                    res.json({
+                        error:true,
+                        message : err
+                    })
+                }
+            })
+        }else{
+            res.json({
+                error:true,
+                message : "Teacher id require!"
+            })
+        }
+    }else{
         res.json({
-            message : "Delete success!"
+            error:true,
+            message : "Teacher id require!"
         })
     }
-
 }
 
 module.exports =  {
