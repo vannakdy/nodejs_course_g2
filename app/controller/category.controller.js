@@ -34,12 +34,21 @@ const getAll = (req, res) => {
 };
 
 const create = () => {
-    var message = "";
+    var message = {};
     var body = req.body;
     if(body){
         if(isEmpty(body.name)){
             message.name = "param name require!"
         }
+    }
+    if(Object.keys(message).length > 0 ){
+        res.json({
+            error : true,
+            message : message
+        })
+    }else{
+        var sql = "INSERT INTO () VALUSE ()";
+        db.query(sql),[]
     }
 };
 const update = () => {};
