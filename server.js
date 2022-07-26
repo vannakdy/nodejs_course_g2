@@ -14,6 +14,8 @@ require("./app/routes/teacher.routes")(app)
 require("./app/routes/student.routes")(app)
 require("./app/routes/customer.routes")(app)
 require("./app/routes/category.routes")(app)
+require("./app/routes/course.routes")(app)
+require("./app/routes/auth.routes")(app)
 
 // const passEncrypt = bcrypt.hashSync("123",8);
 // if(bcrypt.compareSync("123",passEncrypt)){
