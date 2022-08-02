@@ -1,4 +1,6 @@
 const express = require("express")
+const jwt = require("jsonwebtoken")
+const {config} = require("./app/config/hepler")
 // const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser")
 const app = express();
@@ -8,6 +10,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.get("/",(req,res)=>{
     res.send("");
 })
+
 
 // import
 require("./app/routes/teacher.routes")(app)

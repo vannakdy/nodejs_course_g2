@@ -12,6 +12,7 @@ const {isEmpty} = require("../config/hepler")
 // `update_at`;
 
 const getAll = (req, res) => {
+    console.log(req.user.user_id)
     var sql = "SELECT *,DATE_FORMAT(create_at,'%d/%m/%Y %h:%i %p') AS create_at, DATE_FORMAT(update_at,'%d/%m/%Y %h:%i %p') AS update_at FROM category";
     var category_id = null;
     if(req.params && req.params.id != null){

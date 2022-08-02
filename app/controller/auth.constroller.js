@@ -1,7 +1,33 @@
 const db = require("../config/db.config");
-const {isEmpty}  = require("../config/hepler");
+const {isEmpty,config}  = require("../config/hepler");
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
+
+const validateToken = (req,res,next) => {
+    var AuthHeader = req.headers["authorization"]
+    if(AuthHeader){
+        AuthHeader = AuthHeader.split(" ");
+        var token = AuthHeader[1]
+        jwt.verify(token,config.local_token,(err,obj_info)=>{
+            if(!err){
+                req.user = obj_info.user
+                next();
+                
+            }else{
+                res.json({
+                    error:true,
+                    message : "Invalid token"
+                })
+            }
+        })
+    }else{
+        res.json({
+            error:true,
+            message : "Please fill in token"
+        })
+    }
+}
+
 const createUser = (req,res) => {
     var {
         username,
@@ -77,7 +103,7 @@ const login = (req,res) => {
         })
     }else{
         // - check username is exist
-        var sql = "SELECT password,username,tel,email,create_at FROM user WHERE username = ? AND status = 1";
+        var sql = "SELECT user_id , password,username,tel,email,create_at FROM user WHERE username = ? AND status = 1";
         db.query(sql,[username],(err,result)=>{
             if(!err){
                 if(result.length == 0){
@@ -110,7 +136,7 @@ const login = (req,res) => {
 }
 
 const generateAccessToken = (obj_inof) =>{
-    return jwt.sign(obj_inof,"JLKDJdfaljlafjl;kjl;kjfejopijsdjf;lkjl;kjdaFLKJELKJDLFJSLFK",{expiresIn:"1h"})
+    return jwt.sign(obj_inof,config.local_token,{expiresIn:"1h"})
 }
 
 const changeStatusUser = (req,res) => {
@@ -145,5 +171,6 @@ const changeStatusUser = (req,res) => {
 module.exports = {
     createUser,
     login,
-    changeStatusUser
+    changeStatusUser,
+    validateToken
 }
