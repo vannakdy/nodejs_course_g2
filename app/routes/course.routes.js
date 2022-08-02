@@ -5,12 +5,14 @@ const{
     update,
     remove
 } = require("../controller/course.controller");
+
+const {validateToken} = require("../controller/auth.constroller")
 const course = (app)=>{
-    app.post("/api/course",getAll)
-    app.get("/api/course/:id",getOne)
-    app.post("/api/course",create)
-    app.put("/api/course",update)
-    app.delete("/api/course",remove)
+    app.post("/api/course",validateToken,getAll)
+    app.get("/api/course/:id",validateToken,getOne)
+    app.post("/api/course",validateToken,create)
+    app.put("/api/course",validateToken,update)
+    app.delete("/api/course",validateToken,remove)
 
 }
 module.exports = course;

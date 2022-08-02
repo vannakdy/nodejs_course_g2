@@ -2,12 +2,12 @@
 const teacher = (app) => {
     const router = require("express").Router(); 
     const teacherController = require("../controller/teacher.controller")
-
-    router.get("/api/teacher",teacherController.getLists)
-    router.get("/api/teacher/:id",teacherController.getOne) // add route type params
-    router.post("/api/teacher",teacherController.create) 
-    router.put("/api/teacher",teacherController.edit)
-    router.delete("/api/teacher",teacherController.remove)
+    const {validateToken} = require("../controller/auth.constroller")
+    router.get("/api/teacher",validateToken,teacherController.getLists)
+    router.get("/api/teacher/:id",validateToken,teacherController.getOne) // add route type params
+    router.post("/api/teacher",validateToken,teacherController.create) 
+    router.put("/api/teacher",validateToken,teacherController.edit)
+    router.delete("/api/teacher",validateToken,teacherController.remove)
 
     // router.post("/api/teacher/getlist",teacherController.getLists)
     // router.post("/api/teacher/getlist/:id",teacherController.getOne)
